@@ -105,8 +105,9 @@
           <h3>St. Joseph Church</h3>
           <p>Kurumbala</p>
           <a
+            id="mapButton"
             class="ghost-button"
-            href="https://www.google.com/maps/dir//St.+Joseph's+Church,+MXGR%2BF2X,+road,+Kalpetta,+Padinjarathara,+Kerala+673575/@11.5682,76.2363243,15z/data=!4m8!4m7!1m0!1m5!1m1!1s0x3ba6768059df6499:0x405ac50e4eb44e73!2m2!1d75.9901364!2d11.6762287?entry=ttu&g_ep=EgoyMDI2MDQxMy4wIKXMDSoASAFQAw%3D%3D"
+            href="https://www.google.com/maps/dir//St.+Joseph's+Church,+MXGR%2BF2X,+road,+Kalpetta,+Padinjarathara,+Kerala+673575/@11.5682,76.2363243,15z/data=!3m1!4b1!4m8!4m7!1m0!1m5!1m1!1s0x3ba6768059df6499:0x405ac50e4eb44e73!2m2!1d75.9901364!2d11.6762287?entry=ttu&g_ep=EgoyMDI2MDQyMi4wIKXMDSoASAFQAw%3D%3D"
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -164,9 +165,11 @@
     const lightbox = document.getElementById("lightbox");
     const lightboxClose = document.getElementById("lightboxClose");
     const lightboxImage = document.getElementById("lightboxImage");
+    const mapButton = document.getElementById("mapButton");
     const galleryItems = document.querySelectorAll(".gallery-item");
     const revealItems = document.querySelectorAll(".reveal");
     const engagementDate = new Date("2026-05-09T16:30:00+05:30");
+    const mapUrl = "https://www.google.com/maps/search/?api=1&query=St.%20Joseph%20Church%20Kurumbala";
     let invitationOpen = false;
     function pad(value) {
       return String(value).padStart(2, "0");
@@ -271,6 +274,15 @@
         const image = item.querySelector("img");
         openLightbox(item.dataset.image, image.alt);
       });
+    });
+
+    mapButton.addEventListener("click", (event) => {
+      event.preventDefault();
+      const popup = window.open(mapUrl, "_blank", "noopener,noreferrer");
+
+      if (!popup) {
+        window.location.href = mapUrl;
+      }
     });
 
     lightbox.addEventListener("click", (event) => {
