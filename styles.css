@@ -360,11 +360,6 @@ body.invitation-open .petals {
   padding: 2rem;
 }
 
-.scratch-card {
-  position: relative;
-  overflow: hidden;
-}
-
 .date-primary {
   margin: 0;
   font-family: "Playfair Display", serif;
@@ -378,22 +373,6 @@ body.invitation-open .petals {
   margin: 0.5rem 0 0;
   font-size: 1.15rem;
   color: hsl(var(--muted-foreground));
-}
-
-.scratch-surface {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: var(--radius);
-  cursor: pointer;
-  touch-action: none;
-  transition: opacity 0.4s ease;
-}
-
-.scratch-surface.is-cleared {
-  opacity: 0;
-  pointer-events: none;
 }
 
 .venue-icon {

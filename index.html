@@ -93,7 +93,6 @@
             <p class="date-secondary">Saturday, 4:30 PM</p>
             <p class="date-location">St. Joseph Church, Kurumbala</p>
           </div>
-          <canvas class="scratch-surface" id="scratchCanvas"></canvas>
         </div>
       </div>
     </section>
@@ -157,7 +156,6 @@
     const openingScreen = document.getElementById("openingScreen");
     const videoBackdrop = document.getElementById("videoBackdrop");
     const petals = document.getElementById("petals");
-    const scratchCanvas = document.getElementById("scratchCanvas");
     const countdownDays = document.getElementById("countdownDays");
     const countdownHours = document.getElementById("countdownHours");
     const countdownMinutes = document.getElementById("countdownMinutes");
@@ -170,9 +168,6 @@
     const revealItems = document.querySelectorAll(".reveal");
     const engagementDate = new Date("2026-05-09T16:30:00+05:30");
     let invitationOpen = false;
-    let scratching = false;
-    let scratchDone = false;
-
     function pad(value) {
       return String(value).padStart(2, "0");
     }
@@ -234,93 +229,6 @@
       }
     }
 
-    function setupScratchCard() {
-      const context = scratchCanvas.getContext("2d");
-      const texture = new Image();
-
-      function paintSurface() {
-        const width = scratchCanvas.offsetWidth;
-        const height = scratchCanvas.offsetHeight;
-        scratchCanvas.width = width * 2;
-        scratchCanvas.height = height * 2;
-        context.setTransform(1, 0, 0, 1, 0, 0);
-        context.scale(2, 2);
-        context.clearRect(0, 0, width, height);
-        context.drawImage(texture, 0, 0, width, height);
-        context.fillStyle = "rgba(120, 80, 20, 0.65)";
-        context.font = "600 14px 'Playfair Display'";
-        context.textAlign = "center";
-        context.fillText("Scratch to reveal the engagement date", width / 2, height / 2);
-      }
-
-      function revealAt(clientX, clientY) {
-        if (scratchDone) {
-          return;
-        }
-
-        const rect = scratchCanvas.getBoundingClientRect();
-        const x = clientX - rect.left;
-        const y = clientY - rect.top;
-
-        context.globalCompositeOperation = "destination-out";
-        context.beginPath();
-        context.arc(x, y, 20, 0, Math.PI * 2);
-        context.fill();
-
-        const pixels = context.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height).data;
-        let cleared = 0;
-
-        for (let i = 3; i < pixels.length; i += 4) {
-          if (pixels[i] < 128) {
-            cleared += 1;
-          }
-        }
-
-        if (cleared / (pixels.length / 4) > 0.4) {
-          scratchDone = true;
-          scratchCanvas.classList.add("is-cleared");
-        }
-      }
-
-      texture.addEventListener("load", paintSurface);
-      texture.src = "assets/scratch-surface.jpg";
-
-      if (texture.complete) {
-        paintSurface();
-      }
-      window.addEventListener("resize", paintSurface);
-
-      scratchCanvas.addEventListener("pointerdown", () => {
-        scratching = true;
-      });
-
-      scratchCanvas.addEventListener("pointerdown", (event) => {
-        scratchCanvas.setPointerCapture(event.pointerId);
-        revealAt(event.clientX, event.clientY);
-      });
-
-      scratchCanvas.addEventListener("pointerup", (event) => {
-        scratching = false;
-        scratchCanvas.releasePointerCapture(event.pointerId);
-      });
-
-      scratchCanvas.addEventListener("pointerleave", () => {
-        scratching = false;
-      });
-
-      scratchCanvas.addEventListener("pointercancel", () => {
-        scratching = false;
-      });
-
-      scratchCanvas.addEventListener("pointermove", (event) => {
-        if (!scratching) {
-          return;
-        }
-
-        revealAt(event.clientX, event.clientY);
-      });
-    }
-
     function setupRevealObserver() {
       const observer = new IntersectionObserver(
         (entries) => {
@@ -378,7 +286,6 @@
     });
 
     createPetals();
-    setupScratchCard();
     setupRevealObserver();
     updateCountdown();
     window.setInterval(updateCountdown, 1000);
